@@ -109,17 +109,7 @@ echo ""
 
 echo ""
 echo "Setting up database..."
-if [ $CI ]; then
-  $dcr web upgrade --noinput
-  echo ""
-  echo "Did not prompt for user creation due to non-interactive shell."
-  echo "Run the following command to create one yourself (recommended):"
-  echo ""
-  echo "  docker-compose run --rm web createuser"
-  echo ""
-else
-  $dcr web upgrade
-fi
+$dcr web upgrade --noinput
 
 
 SENTRY_DATA_NEEDS_MIGRATION=$(docker run --rm -v sentry-data:/data alpine ash -c "[ ! -d '/data/files' ] && ls -A1x /data | wc -l || true")
