@@ -24,12 +24,6 @@ x-sentry-defaults: &sentry_defaults
   volumes:
     - 'sentry-data:/data'
     - './sentry:/etc/sentry'
-  labels:
-    traefik.http.routers.sentry-router.rule: "Host(`!!domain-name!!`)"
-    traefik.http.routers.sentry-router.service: "sentry-service"
-    traefik.http.routers.sentry-router.tls.certResolver: "letsencrypt"
-    traefik.http.routers.sentry-router.entrypoints: "web-secure"
-    traefik.http.services.sentry-service.loadbalancer.server.port: "9000"
 x-snuba-defaults: &snuba_defaults
   << : *restart_policy
   depends_on:
@@ -141,6 +135,12 @@ services:
     << : *sentry_defaults
     ports:
       - '9000:9000/tcp'
+    labels:
+      traefik.http.routers.sentry-router.rule: "Host(`!!domain-name!!`)"
+      traefik.http.routers.sentry-router.service: "sentry-service"
+      traefik.http.routers.sentry-router.tls.certResolver: "letsencrypt"
+      traefik.http.routers.sentry-router.entrypoints: "web-secure"
+      traefik.http.services.sentry-service.loadbalancer.server.port: "9000"
   cron:
     << : *sentry_defaults
     command: run cron
