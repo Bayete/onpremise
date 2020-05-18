@@ -136,10 +136,16 @@ services:
     ports:
       - '9000:9000/tcp'
     labels:
-      traefik.http.routers.sentry-router.rule: "Host(`!!domain-name!!`)"
-      traefik.http.routers.sentry-router.service: "sentry-service"
-      traefik.http.routers.sentry-router.tls.certResolver: "letsencrypt"
-      traefik.http.routers.sentry-router.entrypoints: "web-secure"
+      traefik.enable: true
+      traefik.http.routers.http-sentry-router.rule: "Host(`!!domain-name!!`)"
+      traefik.http.routers.http-sentry-router.service: "sentry-service"
+      traefik.http.routers.http-sentry-router.entrypoints: "web"
+      traefik.http.routers.http-sentry-router.middlewares: "https-redirect@file"
+      traefik.http.routers.https-sentry-router.rule: "Host(`!!domain-name!!`)"
+      traefik.http.routers.https-sentry-router.entrypoints: "web-secure"
+      traefik.http.routers.https-sentry-router.service: "sentry-service"
+      traefik.http.routers.https-sentry-router.tls.certResolver: "letsencrypt"
+      traefik.http.routers.https-sentry-router.tls: "true"
       traefik.http.services.sentry-service.loadbalancer.server.port: "9000"
   cron:
     << : *sentry_defaults
